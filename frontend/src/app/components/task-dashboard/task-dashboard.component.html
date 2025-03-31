@@ -1,0 +1,22 @@
+<div class="dashboard-container">
+  <div class="dashboard-body">
+  <div class="dashboard-header">
+    <span>Task ID</span>
+    <span>Answer</span>
+    <span>Status</span>
+    <span>Retries</span>
+    <span>Error</span>
+    <button (click)="refresh()">Refresh table</button>
+  </div>
+
+  <ng-container *ngIf="tasks$ | async as tasks">
+    <div class="table-row" *ngFor="let task of tasks">
+      <span>{{ task.taskId }}</span>
+      <span>{{ task.answer }}</span>
+      <span><app-status-badge [status]="task.status"></app-status-badge></span>
+      <span>{{ task.retries }}</span>
+      <span>{{ task.errorMessage || '-' }}</span>
+    </div>
+  </ng-container>
+</div>
+</div>

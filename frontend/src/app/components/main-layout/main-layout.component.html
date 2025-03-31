@@ -1,0 +1,32 @@
+<div class="layout-container">
+  <header class="app-header">
+    <div class="logo-title">
+      <img src="https://via.placeholder.com/24" alt="logo" />
+      <span>Read aloud | Q1/3</span>
+    </div>
+
+    <button class="burger" *ngIf="isMobile" (click)="toggleMenu()">☰</button>
+  </header>
+
+  <div *ngIf="menuOpen && isMobile" class="mobile-menu">
+    <div class="header">
+    <h3>Menu</h3><button class="close" (click)="toggleMenu()">✖</button>
+  </div>
+    <button (click)="switchView('form'); toggleMenu()">Task</button>
+    <button (click)="switchView('dashboard'); toggleMenu()">Dashboard</button>
+  </div>
+
+  <ng-container *ngIf="isMobile; else desktopView">
+    <div class="mobile-view">
+      <app-task-form *ngIf="activeView === 'form'"></app-task-form>
+      <app-task-dashboard *ngIf="activeView === 'dashboard'"></app-task-dashboard>
+    </div>
+  </ng-container>
+
+  <ng-template #desktopView>
+    <div class="desktop-layout">
+      <app-task-form></app-task-form>
+      <app-task-dashboard></app-task-dashboard>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,25 @@
+.badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    display: inline-block;
+    width: fit-content;
+  }
+  
+  .success {
+    background: #e6f4ea;
+    color: #2e7d32;
+  }
+  
+  .error {
+    background: #fdecea;
+    color: #c62828;
+  }
+  
+  .pending {
+    background: #e7f0fd;
+    color: #1e88e5;
+  }
+  

@@ -1,0 +1,20 @@
+<div class="form-container">
+  <div class="card question">
+    <h3>QUESTION:</h3>
+    <p>Lorem ipsum dolor sit amet consectetur. Et sagittis morbi accumsan ultricies eu rhoncus. Ultrices rhoncus massa duis non id neque?</p>
+  </div>
+
+  <form (ngSubmit)="submit()" class="card answer">
+    <h3>ANSWER:</h3>
+    <textarea
+      [(ngModel)]="answer"
+      name="answer"
+      maxlength="200"
+      required
+      placeholder="Enter your answer"
+    ></textarea>
+    <div class="char-counter">{{ answer.length }}/200</div>
+
+    <button type="submit" class="submit-btn">Submit</button>
+  </form>
+</div>

@@ -1,0 +1,64 @@
+.form-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  
+    h3 {
+      margin: 0 0 0.5rem;
+      font-size: 0.9rem;
+      color: #5068d2;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+  
+    p {
+      margin: 0;
+      line-height: 1.4;
+      color: #333;
+    }
+  
+    textarea {
+      width: 100%;
+      resize: none;
+      height: 120px;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 0.95rem;
+      font-family: inherit;
+      box-sizing: border-box;
+    }
+  
+    .char-counter {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+      color: #888;
+    }
+  
+    .submit-btn {
+      margin-top: 1rem;
+      width: 100%;
+      padding: 0.75rem;
+      background: #5068d2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+  
+      &:hover {
+        background: #3545b4;
+      }
+    }
+  }
+  
