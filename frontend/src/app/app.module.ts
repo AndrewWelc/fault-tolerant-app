@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxsModule } from '@ngxs/store';
 import { TaskState } from './state/task-state';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +11,7 @@ import { TaskDashboardComponent } from './components/task-dashboard/task-dashboa
 import { AppComponent } from './app.component';
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
 import { StatusBadgeComponent } from './components/status-badge/status-badge.component';
+import { TaskHeaderComponent } from './components/task-header/task-header.component';
 
 @NgModule({
   declarations: [
@@ -16,15 +19,18 @@ import { StatusBadgeComponent } from './components/status-badge/status-badge.com
     TaskFormComponent,
     TaskDashboardComponent,
     MainLayoutComponent,
-    StatusBadgeComponent
+    StatusBadgeComponent,
+    TaskHeaderComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
     NgxsModule.forRoot([TaskState]),
+    MatProgressSpinnerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}

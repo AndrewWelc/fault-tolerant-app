@@ -1,0 +1,42 @@
+@import 'variables';
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: $neutral;
+    padding: 10px 24px;
+    border-radius: 8px;
+    gap: 12px;
+    position: relative;
+    box-shadow: $standardShadow;
+  
+    .logo-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 400;
+      font-size: 14px;
+      color: $neutral950;
+
+      .border {
+        width: 1px;
+        height: 20px;
+        background-color: $neutral100;
+      }
+  
+      img {
+        height: 20px;
+        width: 88px;
+      }
+    }
+  
+    .burger {
+      position: absolute;
+      right: 4px;
+      background: $burgerblue;
+      border-radius: 8px;
+      height: 32px;
+      width: 32px;
+      border: none;    
+    }
+  }

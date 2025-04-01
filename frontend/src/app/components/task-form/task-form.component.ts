@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { SubmitTask } from 'src/app/state/task-actions';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,6 +12,8 @@ export class TaskFormComponent {
   answer = '';
 
   constructor(private store: Store) {}
+
+  @Input() isMobile: boolean = false;
 
   submit() {
     const task = {

@@ -1,25 +1,30 @@
+@import 'variables';
+
 .badge {
-    padding: 0.25rem 0.6rem;
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: bold;
-    text-transform: capitalize;
-    display: inline-block;
-    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    width: 90%;
+    box-sizing: border-box;
   }
   
   .success {
-    background: #e6f4ea;
-    color: #2e7d32;
+    background: $success;
+    color: $successText;
   }
   
   .error {
-    background: #fdecea;
-    color: #c62828;
+    background: $error;
+    color: $errorText;
   }
   
   .pending {
-    background: #e7f0fd;
-    color: #1e88e5;
+    background: $pending;
+    color: $pendingText
   }
   

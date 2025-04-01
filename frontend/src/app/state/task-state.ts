@@ -1,6 +1,6 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { SubmitTask } from './task-actions';
+import { FetchTasks, SubmitTask } from './task-actions';
 import { HttpClient } from '@angular/common/http';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
@@ -66,4 +66,17 @@ export class TaskState {
       })
     );
   }
+
+  @Action(FetchTasks)
+    fetchTasks(ctx: StateContext<TaskStateModel>) {
+  return this.http.get<Task[]>('http://localhost:3000/tasks').pipe(
+    tap((tasks) => {
+      ctx.patchState({ tasks });
+    }),
+    catchError((err) => {
+      console.error('Failed to fetch tasks', err);
+      return throwError(() => err);
+    })
+  );
+}
 }

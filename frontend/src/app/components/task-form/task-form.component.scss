@@ -1,27 +1,57 @@
+@import 'variables';
+
 .form-container {
+    gap: 12px;
+    height: 100%;
+    box-sizing: border-box;
     display: flex;
+    overflow: hidden;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 20px;
+    padding: 20px;
+    background-color: $neutral10;
+    border-radius: 8px;
+    position: relative;
+    padding-bottom: 88px;
+
+    @media (max-width: $mobileBreakpoint){
+      height: unset;
+      margin-bottom: 60px;
+      padding-bottom: 20px;
+    }
   }
+
   
   .card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.25rem;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    background: $neutral;
+    border-radius: 8px;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: $standardShadow;
+    font-size: 16px;
+
+    @media (max-width: $mobileBreakpoint){
+      padding: 16px 12px;
+      font-size: 14px;
+    }
   
     h3 {
-      margin: 0 0 0.5rem;
-      font-size: 0.9rem;
-      color: #5068d2;
+      margin: 0;
+      font-size: 20px;
+      color: $burgerblue;
       font-weight: 700;
       text-transform: uppercase;
+
+      @media (max-width: $mobileBreakpoint){
+        font-size: 16px;
+      }
     }
   
     p {
       margin: 0;
-      line-height: 1.4;
-      color: #333;
+      color: $neutral700;
     }
   
     textarea {
@@ -37,28 +67,49 @@
     }
   
     .char-counter {
-      margin-top: 0.5rem;
-      font-size: 0.85rem;
+      font-size: 12px;
       text-align: center;
-      color: #888;
+      color: $neutral700;
+    }
+
+    .desktop-container {
+      position: absolute;
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      padding: 16px 40px;
+      box-sizing: border-box;
+      background-color: $neutral;
+      box-shadow: $topShadow;
+
+    }
+
+    .mobile-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      padding: 20px 16px;
+      width: 100%;
+      background-color: $neutral;
+      box-sizing: border-box;
+
+      button {
+        width: 100%;
+      }
     }
   
     .submit-btn {
-      margin-top: 1rem;
-      width: 100%;
-      padding: 0.75rem;
-      background: #5068d2;
-      color: white;
+      width: 160px;
+      padding: 8px 16px;
+      background: $burgerblue;
+      color: $neutral;
       border: none;
       border-radius: 8px;
-      font-weight: bold;
-      font-size: 1rem;
+      font-weight: 700;
+      font-size: 14px;
       cursor: pointer;
-      transition: background 0.2s;
-  
-      &:hover {
-        background: #3545b4;
-      }
     }
   }
   

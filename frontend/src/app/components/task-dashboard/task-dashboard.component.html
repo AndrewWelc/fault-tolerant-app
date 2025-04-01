@@ -1,22 +1,65 @@
 <div class="dashboard-container">
-  <div class="dashboard-body">
-  <div class="dashboard-header">
-    <span>Task ID</span>
-    <span>Answer</span>
-    <span>Status</span>
-    <span>Retries</span>
-    <span>Error</span>
-    <button (click)="refresh()">Refresh table</button>
+  <div class="spinner-overlay" *ngIf="isLoading">
+    <mat-spinner
+      color="primary"
+      diameter="50"
+      strokeWidth="5"
+      mode="indeterminate"
+    ></mat-spinner>
   </div>
 
-  <ng-container *ngIf="tasks$ | async as tasks">
-    <div class="table-row" *ngFor="let task of tasks">
-      <span>{{ task.taskId }}</span>
-      <span>{{ task.answer }}</span>
-      <span><app-status-badge [status]="task.status"></app-status-badge></span>
-      <span>{{ task.retries }}</span>
-      <span>{{ task.errorMessage || '-' }}</span>
+  <div class="dashboard-body">
+    <div class="dashboard-header" *ngIf="!isMobile">
+      <span>Task ID</span>
+      <span>Answer</span>
+      <span>Status</span>
+      <span>Retries</span>
+      <span>Error</span>
+      <button (click)="refresh()">
+        <img src="assets/icons/refresh.svg" alt="Refresh" class="icon" />
+        Refresh table
+      </button>
     </div>
-  </ng-container>
-</div>
+
+    <ng-container *ngIf="tasks$ | async as tasks">
+      <ng-container *ngIf="!isMobile">
+        <div class="table-row" *ngFor="let task of tasks">
+          <span>{{ task.taskId }}</span>
+          <span>{{ task.answer }}</span>
+          <span><app-status-badge [status]="task.status"></app-status-badge></span>
+          <span>{{ task.retries }}</span>
+          <span>{{ task.errorMessage || '-' }}</span>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="isMobile">
+        <div class="task-card" *ngFor="let task of tasks">
+          <div class="task-card-section">
+            <h2>Task ID</h2> 
+            <span>{{ task.taskId }}</span>
+            <span class="status-badge"><app-status-badge [status]="task.status"></app-status-badge></span>
+          </div>
+         <div class="task-card-section">
+          <h2>Answer:</h2> 
+          <span>{{ task.answer }}</span>
+         </div>
+          <div class="task-card-section">
+            <h2>Retries:</h2> 
+            <span>{{ task.retries }}</span>
+          </div>
+          <div class="task-card-section" *ngIf="task.errorMessage">
+            <h2>Error:</h2> 
+            <span>{{ task.errorMessage || '-' }}</span>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <div *ngIf="isMobile" class="mobile-btn-container">
+    <button (click)="refresh()">
+      <img src="assets/icons/mobRefresh.svg" alt="Refresh" />
+      Refresh table
+    </button>
+  </div>
 </div>

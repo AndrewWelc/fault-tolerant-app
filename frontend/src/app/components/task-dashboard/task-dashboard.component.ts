@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
+import { FetchTasks } from 'src/app/state/task-actions';
 import { TaskState, Task } from 'src/app/state/task-state';
 
 @Component({
@@ -10,10 +11,22 @@ import { TaskState, Task } from 'src/app/state/task-state';
 })
 export class TaskDashboardComponent {
   @Select(TaskState.tasks) tasks$!: Observable<Task[]>;
+  isLoading = false;
 
+  @Input() isMobile: boolean = false;
+  
   constructor(private store: Store) {}
 
+  ngOnInit() {
+    this.refresh();
+  }
+
   refresh() {
-    console.log('refreshing...');
+    this.isLoading = true;
+    this.store.dispatch(new FetchTasks()).subscribe({
+      next: () => (this.isLoading = false),
+      error: () => (this.isLoading = false),
+    });
   }
 }
+
