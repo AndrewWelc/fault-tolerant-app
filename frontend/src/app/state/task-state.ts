@@ -4,12 +4,14 @@ import { FetchTasks, SubmitTask } from './task-actions';
 import { HttpClient } from '@angular/common/http';
 import { tap, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { environment } from '../../environment';
 
 export enum TaskStatus {
-    Pending = 'pending',
-    Success = 'success',
-    Error = 'error'
-  }
+  Pending = 'pending',
+  Success = 'success',
+  Error = 'error'
+}
+
 export interface Task {
   taskId: string;
   answer: string;
@@ -43,7 +45,7 @@ export class TaskState {
     const state = ctx.getState();
     ctx.patchState({ tasks: [...state.tasks, task] });
 
-    return this.http.post('http://localhost:3000/tasks', task).pipe(
+    return this.http.post(`${environment.apiUrl}/tasks`, task).pipe(
       tap(() => {
         const updated = ctx.getState().tasks.map(t =>
           t.taskId === task.taskId ? { ...t, status: TaskStatus.Pending } : t
@@ -68,15 +70,15 @@ export class TaskState {
   }
 
   @Action(FetchTasks)
-    fetchTasks(ctx: StateContext<TaskStateModel>) {
-  return this.http.get<Task[]>('http://localhost:3000/tasks').pipe(
-    tap((tasks) => {
-      ctx.patchState({ tasks });
-    }),
-    catchError((err) => {
-      console.error('Failed to fetch tasks', err);
-      return throwError(() => err);
-    })
-  );
-}
+  fetchTasks(ctx: StateContext<TaskStateModel>) {
+    return this.http.get<Task[]>(`${environment.apiUrl}/tasks`).pipe(
+      tap((tasks) => {
+        ctx.patchState({ tasks });
+      }),
+      catchError((err) => {
+        console.error('Failed to fetch tasks', err);
+        return throwError(() => err);
+      })
+    );
+  }
 }

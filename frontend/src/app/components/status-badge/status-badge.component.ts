@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
   <span [ngClass]="status" class="badge">
     <img
       class="icon"
-      [src]="'assets/icons/' + status + '.svg'"
+      [src]="'assets/icons/' + status.toLowerCase() + '.svg'"
       [alt]="status"
     />
       {{ statusLabels[status] }}
