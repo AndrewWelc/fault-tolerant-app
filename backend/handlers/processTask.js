@@ -2,6 +2,8 @@ const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const sqs = new AWS.SQS();
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 const pushUpdate = async (updateData) => {
   const connectionsData = await dynamo.scan({
     TableName: process.env.CONNECTIONS_TABLE
@@ -33,6 +35,8 @@ const pushUpdate = async (updateData) => {
 };
 
 exports.handler = async (event) => {
+  const delayFactor = process.env.NODE_ENV === 'test' ? 0 : 1;
+  
   for (const record of event.Records) {
     const taskId = record.body;
     let attempt = 0;
@@ -49,7 +53,7 @@ exports.handler = async (event) => {
         }
         await dynamo.update({
           TableName: process.env.TASKS_TABLE,
-          Key: { taskId: taskId },
+          Key: { taskId },
           UpdateExpression: "SET #st = :s, retries = :r",
           ExpressionAttributeNames: { "#st": "status" },
           ExpressionAttributeValues: {
@@ -64,13 +68,13 @@ exports.handler = async (event) => {
         lastError = err;
         console.warn(`Task ${taskId} failed on attempt #${attempt}: ${err.message}`);
         if (attempt < 3) {
-          const delaySecs = Math.pow(2, attempt - 1);  
-          await new Promise(res => setTimeout(res, delaySecs * 1000));
+          const delaySecs = Math.pow(2, attempt - 1) * delayFactor;
+          await delay(delaySecs * 1000);
           console.log(`Retrying task ${taskId} (attempt #${attempt + 1})...`);
         } else {
           await dynamo.update({
             TableName: process.env.TASKS_TABLE,
-            Key: { taskId: taskId },
+            Key: { taskId },
             UpdateExpression: "SET #st = :s, errorMessage = :e, retries = :r",
             ExpressionAttributeNames: { "#st": "status" },
             ExpressionAttributeValues: {

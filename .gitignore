@@ -2,3 +2,4 @@
 backend/*.env
 frontend/src/environment*.ts
 /backend/.serverless
+/backend/coverage
