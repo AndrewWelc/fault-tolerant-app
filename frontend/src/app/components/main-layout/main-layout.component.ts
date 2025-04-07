@@ -12,6 +12,10 @@ export class MainLayoutComponent implements OnInit {
 
   ngOnInit() {
     this.checkScreenSize();
+    const savedView = localStorage.getItem('activeView') as 'form' | 'dashboard' | null;
+    if (savedView === 'form' || savedView === 'dashboard') {
+      this.activeView = savedView;
+    }
   }
 
   toggleMenu() {
@@ -30,5 +34,6 @@ export class MainLayoutComponent implements OnInit {
 
   switchView(view: 'form' | 'dashboard') {
     this.activeView = view;
+    localStorage.setItem('activeView', view);
   }
 }
