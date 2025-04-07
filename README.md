@@ -26,7 +26,44 @@ The application is split into two main parts:
 - **Backend:** A Node.js serverless application deployed using the Serverless Framework on AWS. It leverages AWS Lambda, API Gateway (REST and WebSocket), SQS, DynamoDB, and CloudWatch for logging and monitoring. Tasks are processed asynchronously with fault-tolerant retry logic and real-time updates pushed via a WebSocket API.
 
 ## 🏗 Architecture
+**Architecture Diagram:**
+```mermaid
+graph TD
+    subgraph Frontend[Frontend - Angular]
+        UI[🌐 User Interface]
+        WS[🔌 WebSocket Client]
+    end
 
+    subgraph Backend[Backend - Serverless]
+        API[🚪 API Gateway]
+        Lambda[⚡ Lambda Functions]
+        DB[(🗄️ DynamoDB)]
+        Queue[📬 SQS Queue]
+        DLQ[⚠️ Dead Letter Queue]
+    end
+
+    UI -->|HTTP Requests| API
+    UI -->|WebSocket| WS
+    WS -->|Connect/Updates| API
+    API --> Lambda
+    Lambda --> DB
+    Lambda --> Queue
+    Queue --> Lambda
+    Queue -->|Failed Tasks| DLQ
+    DLQ --> Lambda
+
+    style Frontend fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px,color:#000000
+    style Backend fill:#f1f8e9,stroke:#33691e,stroke-width:2px,color:#000000
+
+    style UI fill:#bbdefb,stroke:#0d47a1,stroke-width:2px,color:#000000
+    style WS fill:#bbdefb,stroke:#0d47a1,stroke-width:2px,color:#000000
+
+    style API fill:#ffe0b2,stroke:#ef6c00,stroke-width:2px,color:#000000
+    style Lambda fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000000
+    style DB fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px,color:#000000
+    style Queue fill:#d1c4e9,stroke:#673ab7,stroke-width:2px,color:#000000
+    style DLQ fill:#ffcdd2,stroke:#c62828,stroke-width:2px,color:#000000
+```
 **Key Components:**
 
 - **Frontend (Angular):**
@@ -37,10 +74,29 @@ The application is split into two main parts:
 - **Backend (Serverless):**
   - **AWS Lambda:** Executes functions for task submission, processing, and WebSocket connection management.
   - **AWS API Gateway (REST):** Exposes HTTP endpoints for task submission and fetching tasks.
-  - **AWS SQS:** Buffers tasks for asynchronous processing and handles dead-letter scenarios.
+  - **AWS SQS:** Buffers tasks for asynchronous processing.
+  - **AWS SQS Dead Letter Queue (DLQ):** Handles failed tasks after multiple retries.
   - **AWS DynamoDB:** Stores task details and active WebSocket connection IDs.
   - **AWS API Gateway (WebSocket):** Provides real-time push updates to connected clients.
   - **CloudWatch:** Aggregates logs and monitors function performance.
+
+
+**Supporting Infrastructure:**
+
+- **AWS IAM (Identity and Access Management):**
+  - Manages permissions and access control for all AWS services
+  - Ensures secure communication between components
+  - Controls resource access through role-based policies
+
+- **AWS CloudFormation:**
+  - Manages infrastructure as code
+  - Handles stack deployment and updates
+  - Maintains consistent environment configuration
+
+- **Environment Configuration:**
+  - Lambda environment variables for service configuration
+  - WebSocket endpoint management
+  - Service connection details
 
 ## ⚙️ Setup Instructions
 
