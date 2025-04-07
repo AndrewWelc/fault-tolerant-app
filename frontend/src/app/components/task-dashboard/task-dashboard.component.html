@@ -2,7 +2,7 @@
   <div class="spinner-overlay" *ngIf="isLoading">
     <mat-spinner
       color="primary"
-      diameter="50"
+      diameter="100"
       strokeWidth="5"
       mode="indeterminate"
     ></mat-spinner>
@@ -36,7 +36,7 @@
         <div class="task-card" *ngFor="let task of tasks">
           <div class="task-card-section header">
             <div class="info">
-              <h2>Task ID</h2> 
+              <h2>Task ID</h2>
               <span>{{ task.taskId }}</span>
             </div>
             <div class="status">
@@ -44,15 +44,15 @@
             </div>
           </div>
          <div class="task-card-section">
-          <h2>Answer:</h2> 
+          <h2>Answer:</h2>
           <span>{{ task.answer }}</span>
          </div>
           <div class="task-card-section">
-            <h2>Retries:</h2> 
+            <h2>Retries:</h2>
             <span>{{ task.retries }}</span>
           </div>
           <div class="task-card-section" *ngIf="task.errorMessage">
-            <h2>Error:</h2> 
+            <h2>Error:</h2>
             <span>{{ task.errorMessage || '-' }}</span>
           </div>
         </div>
