@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
 import { TaskState, TaskStatus } from './task-state';
-import { SubmitTask, FetchTasks, StartPolling, StopPolling } from './task-actions';
+import { SubmitTask, FetchTasks, UpdateTaskStatus } from './task-actions';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from '../../environment';
 
@@ -51,32 +51,17 @@ describe('TaskState', () => {
     expect(tasks[0].status).toBe(TaskStatus.Success);
   });
 
-  it('should start polling and fetch multiple times', fakeAsync(() => {
-    store.dispatch(new StartPolling());
+  it('should update task status via UpdateTaskStatus action', () => {
+    const task = { taskId: '1', answer: '42', status: TaskStatus.Pending, retries: 0 };
+    store.dispatch(new SubmitTask(task)).subscribe();
+    const postReq = httpMock.expectOne(`${environment.apiUrl}/tasks`);
+    postReq.flush({});
+    let tasks = store.selectSnapshot(TaskState.tasks);
+    expect(tasks[0].status).toBe(TaskStatus.Pending);
 
-    tick(5000);
-    httpMock.expectOne(`${environment.apiUrl}/tasks`).flush([]);
-
-    tick(5000);
-    httpMock.expectOne(`${environment.apiUrl}/tasks`).flush([]);
-
-    tick(5000);
-    httpMock.expectOne(`${environment.apiUrl}/tasks`).flush([]);
-
-    store.dispatch(new StopPolling());
-  }));
-
-  it('should stop polling and not fetch anymore', fakeAsync(() => {
-    store.dispatch(new StartPolling());
-    tick(5000);
-    httpMock.expectOne(`${environment.apiUrl}/tasks`).flush([]);
-
-    store.dispatch(new StopPolling());
-
-    tick(6000);
-    httpMock.verify(); 
-
-    const tasks = store.selectSnapshot(TaskState.tasks);
-    expect(Array.isArray(tasks)).toBeTrue();
-  }));
+    store.dispatch(new UpdateTaskStatus({ taskId: '1', status: 'success', retries: 1 }));
+    tasks = store.selectSnapshot(TaskState.tasks);
+    expect(tasks[0].status).toBe(TaskStatus.Success);
+    expect(tasks[0].retries).toBe(1);
+  });
 });

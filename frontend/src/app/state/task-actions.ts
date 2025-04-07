@@ -7,10 +7,7 @@ export class SubmitTask {
     static readonly type = '[Task] Fetch Tasks';
 }
 
-export class StartPolling {
-  static readonly type = '[Task] Start Polling';
-}
-
-export class StopPolling {
-  static readonly type = '[Task] Stop Polling';
+export class UpdateTaskStatus {
+  static readonly type = '[Task] Update Task Status';
+  constructor(public payload: { taskId: string, status: string, retries?: number, errorMessage?: string }) {}
 }

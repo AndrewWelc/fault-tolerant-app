@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
 import { finalize, Observable, take } from 'rxjs';
-import { FetchTasks, StartPolling, StopPolling } from 'src/app/state/task-actions';
+import { FetchTasks } from 'src/app/state/task-actions';
 import { TaskState, Task } from 'src/app/state/task-state';
 
 @Component({
@@ -14,7 +14,7 @@ export class TaskDashboardComponent {
   isLoading = false;
 
   @Input() isMobile: boolean = false;
-  
+
   constructor(private store: Store) {}
 
   ngOnInit() {
@@ -23,12 +23,6 @@ export class TaskDashboardComponent {
         this.refresh();
       }
     });
-  
-    this.store.dispatch(new StartPolling());
-  }
-
-  ngOnDestroy() {
-    this.store.dispatch(new StopPolling());
   }
 
   refresh() {

@@ -7,10 +7,11 @@ provider:
   stage: dev
   environment:
     TASKS_TABLE: ${self:service}-tasks-${opt:stage, self:provider.stage}
-    TASKS_QUEUE_URL:
+    TASKS_QUEUE_URL: 
       Ref: tasksQueue
     DLQ_QUEUE_URL:
       Ref: tasksQueueDLQ
+    CONNECTIONS_TABLE: ${self:service}-connections-${opt:stage, self:provider.stage}
   iam:
     role:
       statements:
@@ -23,7 +24,7 @@ provider:
           Resource: 
             Fn::GetAtt: [ tasksTable, Arn ]
         - Effect: Allow
-          Action: 
+          Action:
             - sqs:SendMessage
           Resource:
             - Fn::GetAtt: [ tasksQueue, Arn ]
@@ -36,6 +37,21 @@ provider:
           Resource:
             - Fn::GetAtt: [ tasksQueue, Arn ]
             - Fn::GetAtt: [ tasksQueueDLQ, Arn ]
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:DeleteItem
+            - dynamodb:Scan
+          Resource: 
+            Fn::GetAtt: [ connectionsTable, Arn ]
+        - Effect: Allow
+          Action:
+            - execute-api:ManageConnections
+          Resource: "*"  # TODO: this should be restricted to the websocket api for production
+
+# plugins:
+#   - serverless-dotenv-plugin
+#   - serverless-offline
 
 functions:
   submitTask:
@@ -82,6 +98,21 @@ functions:
           arn:
             Fn::GetAtt: [ tasksQueueDLQ, Arn ]
           batchSize: 1
+  wsConnect:
+    handler: handlers/websocket/wsConnect.handler
+    events:
+      - websocket:
+          route: $connect
+  wsDisconnect:
+    handler: handlers/websocket/wsDisconnect.handler
+    events:
+      - websocket:
+          route: $disconnect
+  wsDefault:
+    handler: handlers/websocket/wsDefault.handler
+    events:
+      - websocket:
+          route: $default
 
 resources:
   Resources:
@@ -110,3 +141,27 @@ resources:
       Properties:
         QueueName: ${self:service}-tasksQueueDLQ-${opt:stage, self:provider.stage}
         MessageRetentionPeriod: 1209600
+    connectionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.CONNECTIONS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: connectionId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: connectionId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+outputs:
+  websocketEndpoint:
+    Description: "WebSocket API Endpoint"
+    Value:
+      Fn::Join:
+        - ""
+        - - "wss://"
+          - Ref: ApiGatewayWebsocketApi
+          - ".execute-api."
+          - Ref: AWS::Region
+          - ".amazonaws.com/"
+          - ${self:provider.stage}

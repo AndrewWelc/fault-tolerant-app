@@ -2,6 +2,36 @@ const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const sqs = new AWS.SQS();
 
+const pushUpdate = async (updateData) => {
+  const connectionsData = await dynamo.scan({
+    TableName: process.env.CONNECTIONS_TABLE
+  }).promise();
+  
+  const apigwManagementApi = new AWS.ApiGatewayManagementApi({
+    endpoint: process.env.WEBSOCKET_ENDPOINT.replace('wss://', '')
+  });
+
+  const postCalls = connectionsData.Items.map(async (connection) => {
+    try {
+      await apigwManagementApi.postToConnection({
+        ConnectionId: connection.connectionId,
+        Data: JSON.stringify(updateData)
+      }).promise();
+    } catch (error) {
+      if (error.statusCode === 410) {
+        await dynamo.delete({
+          TableName: process.env.CONNECTIONS_TABLE,
+          Key: { connectionId: connection.connectionId }
+        }).promise();
+      } else {
+        console.error(`Failed to send update to connection ${connection.connectionId}:`, error);
+      }
+    }
+  });
+  
+  await Promise.all(postCalls);
+};
+
 exports.handler = async (event) => {
   for (const record of event.Records) {
     const taskId = record.body;
@@ -29,6 +59,7 @@ exports.handler = async (event) => {
         }).promise();
         console.log(`Task ${taskId} processed successfully on attempt #${attempt}`);
         success = true;
+        await pushUpdate({ taskId, status: 'success', retries: attempt - 1 });
       } catch (err) {
         lastError = err;
         console.warn(`Task ${taskId} failed on attempt #${attempt}: ${err.message}`);
@@ -50,9 +81,10 @@ exports.handler = async (event) => {
           }).promise();
           await sqs.sendMessage({
             QueueUrl: process.env.DLQ_QUEUE_URL,
-            MessageBody: JSON.stringify({ taskId: taskId, error: err.message })
+            MessageBody: JSON.stringify({ taskId, error: err.message })
           }).promise();
           console.error(`Task ${taskId} failed after ${attempt} attempts. Sent to DLQ.`);
+          await pushUpdate({ taskId, status: 'error', retries: 2, errorMessage: err.message });
         }
       }
     }

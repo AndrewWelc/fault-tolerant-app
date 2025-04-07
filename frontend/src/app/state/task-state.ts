@@ -1,15 +1,15 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { FetchTasks, StartPolling, StopPolling, SubmitTask } from './task-actions';
+import { FetchTasks, SubmitTask, UpdateTaskStatus } from './task-actions';
 import { HttpClient } from '@angular/common/http';
 import { tap, catchError } from 'rxjs/operators';
-import { interval, Subscription, throwError } from 'rxjs';
+import { Subscription, throwError } from 'rxjs';
 import { environment } from '../../environment';
 
 export enum TaskStatus {
   Pending = 'pending',
   Success = 'success',
-  Error = 'error'
+  Error = 'error',
 }
 
 export interface Task {
@@ -27,12 +27,11 @@ export interface TaskStateModel {
 @State<TaskStateModel>({
   name: 'taskState',
   defaults: {
-    tasks: []
-  }
+    tasks: [],
+  },
 })
 @Injectable()
 export class TaskState {
-
   private pollingSubscription: Subscription | null = null;
 
   constructor(private http: HttpClient) {}
@@ -50,25 +49,27 @@ export class TaskState {
 
     return this.http.post(`${environment.apiUrl}/tasks`, task).pipe(
       tap(() => {
-        const updated = ctx.getState().tasks.map(t =>
-          t.taskId === task.taskId ? { ...t, status: TaskStatus.Pending } : t
-        );
+        const updated = ctx
+          .getState()
+          .tasks.map((t) =>
+            t.taskId === task.taskId ? { ...t, status: TaskStatus.Pending } : t,
+          );
         ctx.patchState({ tasks: updated });
       }),
-      catchError(err => {
-        const updated = ctx.getState().tasks.map(t =>
+      catchError((err) => {
+        const updated = ctx.getState().tasks.map((t) =>
           t.taskId === task.taskId
             ? {
                 ...t,
                 status: TaskStatus.Error,
                 errorMessage: err.message || 'Error',
-                retries: t.retries + 1
+                retries: t.retries + 1,
               }
-            : t
+            : t,
         );
         ctx.patchState({ tasks: updated });
         return throwError(() => err);
-      })
+      }),
     );
   }
 
@@ -81,24 +82,24 @@ export class TaskState {
       catchError((err) => {
         console.error('Failed to fetch tasks', err);
         return throwError(() => err);
-      })
+      }),
     );
   }
 
-  @Action(StartPolling)
-  startPolling(ctx: StateContext<TaskStateModel>) {
-    if (this.pollingSubscription) return;
-
-    this.pollingSubscription = interval(5000).subscribe(() => {
-      ctx.dispatch(new FetchTasks());
-    });
-  }
-
-  @Action(StopPolling)
-  stopPolling() {
-    if (this.pollingSubscription) {
-      this.pollingSubscription.unsubscribe();
-      this.pollingSubscription = null;
-    }
+  @Action(UpdateTaskStatus)
+  updateTaskStatus(ctx: StateContext<TaskStateModel>, action: UpdateTaskStatus) {
+    const { taskId, status, retries, errorMessage } = action.payload;
+    const state = ctx.getState();
+    const updatedTasks = state.tasks.map((task) =>
+      task.taskId === taskId
+        ? {
+            ...task,
+            status: status as TaskStatus,
+            retries: retries !== undefined ? retries : task.retries,
+            errorMessage,
+          }
+        : task,
+    );
+    ctx.patchState({ tasks: updatedTasks });
   }
 }
