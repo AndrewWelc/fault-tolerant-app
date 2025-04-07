@@ -49,6 +49,38 @@ backend/
 
    Note: While most features work locally, some AWS-specific features might require actual AWS deployment.
 
+## 🔐 Bootstrap AWS IAM Permissions (One-Time Setup)
+
+Before the first deployment, make sure your AWS user has the required permissions by creating and attaching the `CloudFormationAccessForServerless` policy.
+
+### ✅ Option A: Run the Bootstrap Script (Easy)
+
+If you're comfortable with the AWS CLI, run this one-liner:
+
+```bash
+./scripts/bootstrap-iam.sh
+```
+
+**This will:**
+- Create the `CloudFormationAccessForServerless` IAM policy (if not already created)
+
+- Attach it to your currently authenticated IAM user
+
+- Enable permissions for deploying with Serverless
+
+- Make sure you’ve already configured AWS CLI with the right credentials.
+
+---
+
+### 🛠️ Option B: Manual Setup via AWS Console
+
+1. Open [IAM > Policies](https://console.aws.amazon.com/iam/home#/policies).
+2. Click **Create policy**.
+3. Choose the **JSON** tab.
+4. Paste in the contents of [`policies/CloudFormationAccessForServerless.json`](policies/CloudFormationAccessForServerless.json).
+5. Click **Next**, name the policy: `CloudFormationAccessForServerless`, and finish creation.
+6. Go to **Users**, find your user, and **attach the policy**.
+
 ## 🚀 Deployment
 
 The application is deployed using the Serverless Framework. To deploy:
