@@ -9,8 +9,10 @@ This repository contains a fault-tolerant, full-stack application built using a 
   - [🌟 Overview](#-overview)
   - [🏗 Architecture](#-architecture)
   - [⚙️ Setup Instructions](#️-setup-instructions)
+    - [Prerequisites](#prerequisites)
     - [Backend Setup](#backend-setup)
     - [Frontend Setup](#frontend-setup)
+    - [Local Development](#local-development)
   - [🧪 Testing Instructions](#-testing-instructions)
     - [Backend Testing](#backend-testing)
     - [Frontend Testing](#frontend-testing)
@@ -100,50 +102,71 @@ graph TD
 
 ## ⚙️ Setup Instructions
 
+### Prerequisites
+- Node.js 18.x or later
+- AWS CLI configured with appropriate credentials
+- Serverless Framework v3
+- Docker (for local development)
+- Angular CLI (for frontend development)
+
 ### Backend Setup
-
-1. **Prerequisites:**
-   - Node.js (v14+)
-   - AWS CLI configured with credentials
-   - Serverless Framework CLI v3 (`npm install -g serverless@3`)
-
-2. **Installation & Deployment:**
+1. Navigate to the backend directory:
    ```bash
    cd backend
+   ```
+2. Install dependencies:
+   ```bash
    npm install
+   ```
+3. For deployment to AWS:
+   ```bash
    npm run deploy
    ```
-**NOTE**: `npm run deploy` script runs both `serverless deploy --stage dev` and the `update-websocket`, that updates the WS endpoint in the Lambda functions.
-
-3. **Post-Deployment:** If necessary, update the WebSocket endpoint in your Lambda functions:
-   ```bash
-   npm run update-websocket
-   ```
-
-4. **Endpoints:** After deployment, note the printed REST endpoints and the WebSocket endpoint.
 
 ### Frontend Setup
-
-1. **Prerequisites:**
-   - Node.js (v14+)
-   - Angular CLI (`npm install -g @angular/cli`)
-
-2. **Installation**
+1. Navigate to the frontend directory:
    ```bash
    cd frontend
+   ```
+2. Install dependencies:
+   ```bash
    npm install
    ```
-
-3. **Configuration:** Edit `src/environments/environment.ts` (and `environment.prod.ts` for production) to update:
-   - `apiUrl`: the REST API endpoint from your backend.
-   - `websocketUrl`: (if used) your WebSocket endpoint.
-
-4. **Running the Application:**
+3. Start the development server:
    ```bash
    ng serve
    ```
 
-   Open your browser at http://localhost:4200.
+### Local Development
+The application can be run entirely locally for development purposes:
+
+1. **Backend Local Setup:**
+   ```bash
+   cd backend
+   npm run start:with-db
+   ```
+   This starts:
+   - Local DynamoDB on port 8000
+   - HTTP API on port 4000
+   - WebSocket API on port 4001
+   - Lambda functions on port 4002
+
+2. **Frontend Local Setup:**
+   ```bash
+   cd frontend
+   ng serve
+   ```
+   The frontend will be available at `http://localhost:4200`
+
+3. **Stopping Local Services:**
+   - To stop the backend services:
+     ```bash
+     cd backend
+     npm run stop:db
+     ```
+   - To stop the frontend: Press Ctrl+C in the frontend terminal
+
+Note: While most features work locally, some AWS-specific features might require actual AWS deployment.
 
 ## 🧪 Testing Instructions
 

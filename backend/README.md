@@ -7,6 +7,7 @@ This is the backend service for the Fault Tolerant Application, built using AWS 
 - **Node.js 18.x** or later
 - **AWS CLI** configured with appropriate credentials
 - **Serverless Framework v3** installed globally (`npm install -g serverless@3`)
+- **Docker** installed and running (for local development)
 
 ## 📁 Project Structure
 
@@ -25,9 +26,28 @@ backend/
    ```
 
 2. **Local Development:**
-   - The application uses AWS services and is designed to run in the cloud
-   - For local development, you can use AWS SAM Local or Serverless Offline
-   - Note: Some features (like WebSocket connections) may require AWS deployment
+   The application can be run locally using serverless-offline with Docker for DynamoDB. This setup provides a local environment that closely mirrors the AWS infrastructure.
+
+   To start the local development environment:
+   ```bash
+   npm run start:with-db
+   ```
+   This will:
+   - Start a local DynamoDB instance in Docker on port 8000
+   - Start the serverless-offline server on port 4000
+   - Start WebSocket support on port 4001
+   - Start Lambda functions on port 4002
+
+   Available endpoints:
+   - HTTP API: `http://localhost:4000`
+   - WebSocket: `ws://localhost:4001`
+
+   To stop the local DynamoDB:
+   ```bash
+   npm run stop:db
+   ```
+
+   Note: While most features work locally, some AWS-specific features might require actual AWS deployment.
 
 ## 🚀 Deployment
 

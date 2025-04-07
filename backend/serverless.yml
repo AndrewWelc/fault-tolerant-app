@@ -52,9 +52,28 @@ provider:
             - execute-api:ManageConnections
           Resource: "*"  # this should be restricted to the websocket api for production
 
-# plugins:
-#   - serverless-dotenv-plugin
-#   - serverless-offline
+plugins:
+  - serverless-offline
+  - serverless-dynamodb-local
+  - serverless-s3-local
+
+custom:
+  serverless-offline:
+    httpPort: 4000
+    websocketPort: 4001
+    lambdaPort: 4002
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      docker: true
+      noStart: true
+  s3:
+    host: localhost
+    directory: /tmp
 
 functions:
   submitTask:
