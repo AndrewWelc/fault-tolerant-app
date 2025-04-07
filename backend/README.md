@@ -131,6 +131,20 @@ environment:
 ```
 - All HTTP Lambda functions return responses with the correct CORS headers using the utility
 
+## 🧪 Testing
+
+Backend unit tests are written using **Jest** and can be executed via the CLI.
+
+**To run tests:**
+```bash
+npm run test
+```
+
+**To watch tests during development:**
+```bash
+npm run test:watch
+```
+
 ## 🔄 Development Workflow
 
 1. Make changes to the code

@@ -172,6 +172,19 @@ Note: While most features work locally, some AWS-specific features might require
 
 ### Backend Testing
 
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
+2. Run unit tests with Jest:
+   ```bash
+   npm run test
+   ```
+3. (Optional) Watch for changes during development:
+   ```bash
+   npm run test:watch
+   ```
+
 ### Frontend Testing
 
 1. Navigate to the frontend directory:
