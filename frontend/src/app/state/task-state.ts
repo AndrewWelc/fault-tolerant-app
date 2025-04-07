@@ -1,9 +1,9 @@
 import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { Injectable } from '@angular/core';
-import { FetchTasks, SubmitTask } from './task-actions';
+import { FetchTasks, StartPolling, StopPolling, SubmitTask } from './task-actions';
 import { HttpClient } from '@angular/common/http';
 import { tap, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { interval, Subscription, throwError } from 'rxjs';
 import { environment } from '../../environment';
 
 export enum TaskStatus {
@@ -32,6 +32,9 @@ export interface TaskStateModel {
 })
 @Injectable()
 export class TaskState {
+
+  private pollingSubscription: Subscription | null = null;
+
   constructor(private http: HttpClient) {}
 
   @Selector()
@@ -80,5 +83,22 @@ export class TaskState {
         return throwError(() => err);
       })
     );
+  }
+
+  @Action(StartPolling)
+  startPolling(ctx: StateContext<TaskStateModel>) {
+    if (this.pollingSubscription) return;
+
+    this.pollingSubscription = interval(5000).subscribe(() => {
+      ctx.dispatch(new FetchTasks());
+    });
+  }
+
+  @Action(StopPolling)
+  stopPolling() {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = null;
+    }
   }
 }

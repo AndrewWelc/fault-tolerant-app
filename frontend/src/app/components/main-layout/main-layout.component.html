@@ -57,6 +57,7 @@
       <app-task-header
       *ngIf="isMobile"
       [isMobile]="isMobile"
+      [view]="activeView"
       [menuOpen]="menuOpen"
       (toggleMenu)="toggleMenu()"
       (switchView)="switchView($event)"

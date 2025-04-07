@@ -2,7 +2,7 @@
     <div class="logo-title">
       <img src="assets/icons/rama_logo.svg" alt="logo" />
       <div class="border"></div>
-      <span>Read aloud | Q1/3</span>
+      <span>{{ isMobile && view === 'dashboard' ? 'Dashboard' : 'Read aloud | Q1/3' }}</span>
     </div>
     <button class="burger" *ngIf="isMobile" (click)="onToggleMenu()">
       <img src="assets/icons/menuicon.svg" alt="menu" />

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { FetchTasks } from 'src/app/state/task-actions';
+import { finalize, Observable, take } from 'rxjs';
+import { FetchTasks, StartPolling, StopPolling } from 'src/app/state/task-actions';
 import { TaskState, Task } from 'src/app/state/task-state';
 
 @Component({
@@ -18,15 +18,24 @@ export class TaskDashboardComponent {
   constructor(private store: Store) {}
 
   ngOnInit() {
-    this.refresh();
+    this.tasks$.pipe(take(1)).subscribe(tasks => {
+      if (!tasks || tasks.length === 0) {
+        this.refresh();
+      }
+    });
+  
+    this.store.dispatch(new StartPolling());
+  }
+
+  ngOnDestroy() {
+    this.store.dispatch(new StopPolling());
   }
 
   refresh() {
     this.isLoading = true;
-    this.store.dispatch(new FetchTasks()).subscribe({
-      next: () => (this.isLoading = false),
-      error: () => (this.isLoading = false),
-    });
+    this.store.dispatch(new FetchTasks())
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe();
   }
 }
 

@@ -1,19 +1,44 @@
 @use '@angular/material' as mat;
+@import './styles/variables';
 
 body, html {
     margin: 0;
     padding: 0;
     height: 100%;
     font-family: 'Lato', sans-serif;
-    background: linear-gradient(119.26deg, #3F50C4 14.41%, #1C2969 89.03%);
-    color: #333;
+    color: $neutral950;
+}
+
+
+.mat-mdc-snack-bar-container.snackbar-success {
+  --mdc-snackbar-container-color: #31da56f1;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.mat-mdc-snack-bar-container.snackbar-error {
+  --mdc-snackbar-container-color: #f02d2ddd;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(119.26deg, #3F50C4 14.41%, #1C2969 89.03%);
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 button {
   font-family: 'Lato', sans-serif;
 }
-
-
 
 @include mat.core();
 

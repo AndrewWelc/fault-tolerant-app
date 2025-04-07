@@ -9,6 +9,7 @@
     <h3>ANSWER:</h3>
     <textarea
       [(ngModel)]="answer"
+      [readonly]="isSubmitting"
       name="answer"
       maxlength="200"
       required
@@ -16,7 +17,10 @@
     ></textarea>
     <div class="char-counter">{{ answer.length }}/200</div>
     <div [ngClass]="isMobile ? 'mobile-container' : 'desktop-container'">
-      <button type="submit" class="submit-btn">Submit</button>
+      <button 
+      type="submit" 
+      class="submit-btn"
+      [disabled]="isSubmitting">Submit</button>
     </div>
     
   </form>

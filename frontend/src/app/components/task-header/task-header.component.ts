@@ -8,6 +8,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class TaskHeaderComponent {
   @Input() isMobile: boolean = false;
   @Input() menuOpen: boolean = false;
+  @Input() view: 'form' | 'dashboard' = 'form';
 
   @Output() toggleMenu = new EventEmitter<void>();
   @Output() switchView = new EventEmitter<'form' | 'dashboard'>();

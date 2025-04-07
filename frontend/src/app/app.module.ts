@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgxsModule } from '@ngxs/store';
@@ -25,6 +26,7 @@ import { TaskHeaderComponent } from './components/task-header/task-header.compon
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    MatSnackBarModule,
     FormsModule,
     HttpClientModule,
     NgxsModule.forRoot([TaskState]),

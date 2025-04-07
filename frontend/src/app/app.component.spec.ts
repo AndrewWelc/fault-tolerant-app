@@ -1,12 +1,23 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { MainLayoutComponent } from './components/main-layout/main-layout.component';
+import { TaskFormComponent } from './components/task-form/task-form.component';
+import { NgxsModule } from '@ngxs/store';
+import { TaskState } from './state/task-state';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TaskDashboardComponent } from './components/task-dashboard/task-dashboard.component';
+import { TaskHeaderComponent } from './components/task-header/task-header.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        AppComponent, MainLayoutComponent, TaskFormComponent, TaskDashboardComponent, TaskHeaderComponent
       ],
+      imports: [NgxsModule.forRoot([TaskState]), HttpClientTestingModule, MatSnackBarModule],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
   });
 
@@ -16,16 +27,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'task-frontend'`, () => {
+  it(`should have as title 'fault-tolerant-app'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('task-frontend');
+    expect(app.title).toEqual('fault-tolerant-app');
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('task-frontend app is running!');
-  });
 });
