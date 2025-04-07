@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const responseWithCors = require('./utils/responseWithCors');
+const responseWithCors = require('../utils/responseWithCors');
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const sqs = new AWS.SQS();
