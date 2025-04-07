@@ -66,6 +66,19 @@ The application uses the following AWS services:
 - **SQS** for message queuing
 - **IAM** for permissions management
 
+## 🧩 CORS Configuration
+
+- CORS headers are managed centrally using a utility function: `utils/responseWithCors.js`
+- This helper automatically injects CORS headers into all HTTP responses
+- Origins and allowed headers are configurable via environment variables defined in `serverless.yml`:
+```yaml
+provider:
+environment:
+    CORS_ORIGINS: "http://localhost:4200"
+    CORS_HEADERS: "Content-Type,X-Amz-Date,Authorization,X-Amz-Security-Token,X-Api-Key"
+```
+- All HTTP Lambda functions return responses with the correct CORS headers using the utility
+
 ## 🔄 Development Workflow
 
 1. Make changes to the code

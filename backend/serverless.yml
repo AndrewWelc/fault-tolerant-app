@@ -12,6 +12,9 @@ provider:
     DLQ_QUEUE_URL:
       Ref: tasksQueueDLQ
     CONNECTIONS_TABLE: ${self:service}-connections-${opt:stage, self:provider.stage}
+    CORS_ORIGINS: "http://localhost:4200"
+    CORS_HEADERS: "Content-Type,X-Amz-Date,Authorization,X-Amz-Security-Token,X-Api-Key"
+    
   iam:
     role:
       statements:
@@ -47,7 +50,7 @@ provider:
         - Effect: Allow
           Action:
             - execute-api:ManageConnections
-          Resource: "*"  # TODO: this should be restricted to the websocket api for production
+          Resource: "*"  # this should be restricted to the websocket api for production
 
 # plugins:
 #   - serverless-dotenv-plugin
