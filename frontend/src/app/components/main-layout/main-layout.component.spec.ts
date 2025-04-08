@@ -6,6 +6,8 @@ import { NgxsModule } from '@ngxs/store';
 import { TaskState } from 'src/app/state/task-state';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('MainLayoutComponent', () => {
   let component: MainLayoutComponent;
@@ -18,7 +20,21 @@ describe('MainLayoutComponent', () => {
         TaskFormComponent,
       ],
       imports: [NgxsModule.forRoot([TaskState]), HttpClientTestingModule, MatSnackBarModule],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParams: of({ view: 'form' })
+          }
+        },
+        {
+          provide: Router,
+          useValue: {
+            navigate: jasmine.createSpy('navigate')
+          }
+        }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(MainLayoutComponent);

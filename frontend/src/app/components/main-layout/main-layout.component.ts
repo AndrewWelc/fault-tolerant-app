@@ -1,4 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-layout',
@@ -10,12 +11,17 @@ export class MainLayoutComponent implements OnInit {
   activeView: 'form' | 'dashboard' = 'form';
   menuOpen = false;
 
+  constructor(private route: ActivatedRoute, private router: Router) {}
+
   ngOnInit() {
     this.checkScreenSize();
-    const savedView = localStorage.getItem('activeView') as 'form' | 'dashboard' | null;
-    if (savedView === 'form' || savedView === 'dashboard') {
-      this.activeView = savedView;
-    }
+    
+    this.route.queryParams.subscribe(params => {
+      const view = params['view'] as 'form' | 'dashboard';
+      if (view === 'form' || view === 'dashboard') {
+        this.activeView = view;
+      }
+    });
   }
 
   toggleMenu() {
@@ -34,6 +40,10 @@ export class MainLayoutComponent implements OnInit {
 
   switchView(view: 'form' | 'dashboard') {
     this.activeView = view;
-    localStorage.setItem('activeView', view);
+    
+    this.router.navigate([], {
+      queryParams: { view },
+      queryParamsHandling: 'merge'
+    });
   }
 }

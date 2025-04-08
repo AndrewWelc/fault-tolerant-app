@@ -13,6 +13,7 @@ import { AppComponent } from './app.component';
 import { MainLayoutComponent } from './components/main-layout/main-layout.component';
 import { StatusBadgeComponent } from './components/status-badge/status-badge.component';
 import { TaskHeaderComponent } from './components/task-header/task-header.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { TaskHeaderComponent } from './components/task-header/task-header.compon
     FormsModule,
     HttpClientModule,
     NgxsModule.forRoot([TaskState]),
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    AppRoutingModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
